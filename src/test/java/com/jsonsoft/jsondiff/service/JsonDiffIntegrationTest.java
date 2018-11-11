@@ -1,7 +1,5 @@
 package com.jsonsoft.jsondiff.service;
 
-import static org.mockito.ArgumentMatchers.any;
-
 import java.util.Optional;
 
 import org.junit.Before;
@@ -12,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.jsonsoft.jsondiff.exception.JsonDiffException;
+import com.jsonsoft.jsondiff.exception.JsonDiffLeftNotFoundException;
+import com.jsonsoft.jsondiff.exception.JsonDiffNotFoundException;
 import com.jsonsoft.jsondiff.model.JsonDiff;
 import com.jsonsoft.jsondiff.repository.JsonDiffRepository;
 
@@ -26,15 +27,28 @@ public class JsonDiffIntegrationTest {
 
 	@Before
 	public void setUp() {
-		JsonDiff jsonDiff = new JsonDiff();
-		Optional<JsonDiff> jsonDiffOptional = Optional.of(jsonDiff);
-
-		Mockito.when(JsonDiffRepository.findById(any(Long.class))).thenReturn(jsonDiffOptional);
+		Mockito.when(JsonDiffRepository.findById("1")).thenReturn(Optional.of(new JsonDiff()));
+		Mockito.when(JsonDiffRepository.findById("2")).thenReturn(null);
 	}
 
 	@Test()
-	public void someMethod() {
-		jsonService.someMethod();
+	public void setLeftTest() {
+		jsonService.setLeft("1", "{}");
+	}
+
+	@Test()
+	public void setRightTest() {
+		jsonService.setRight("1", "{}");
+	}
+
+	@Test(expected = JsonDiffLeftNotFoundException.class)
+	public void getDiffWithoutLeftTest() throws JsonDiffException {
+		jsonService.getDiff("1");
+	}
+
+	@Test(expected = JsonDiffNotFoundException.class)
+	public void getDiffNotFoundTest() throws JsonDiffException {
+		jsonService.getDiff("2");
 	}
 
 }

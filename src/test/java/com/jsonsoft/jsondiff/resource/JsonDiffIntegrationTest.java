@@ -29,12 +29,35 @@ public class JsonDiffIntegrationTest {
 	}
 	
 	@Test
-	public void httpRequestTest() {
+	public void httpRequestTestLeft() {
 		given()
+			.port(port)
 			.body("{}")
 			.contentType(ContentType.JSON)
 		.when()
-			.post("/")
+			.post("/v1/diff/1/left")
+		.then()
+			.statusCode(HttpStatus.OK.value());
+	}
+	
+	@Test
+	public void httpRequestTestRight() {
+		given()
+			.port(port)
+			.body("{}")
+			.contentType(ContentType.JSON)
+		.when()
+			.post("/v1/diff/1/right")
+		.then()
+			.statusCode(HttpStatus.OK.value());
+	}
+	
+	@Test
+	public void httpRequestTestGetDiff() {
+		given()
+			.port(port)
+		.when()
+			.get("/v1/diff/1")
 		.then()
 			.statusCode(HttpStatus.OK.value());
 	}
