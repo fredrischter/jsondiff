@@ -19,6 +19,10 @@ import com.jsonsoft.jsondiff.repository.JsonDiffRepository;
 @RunWith(SpringRunner.class)
 public class JsonDiffIntegrationTest {
 
+	private static final String EXISTING_ID = "1";
+
+	private static final String INEXISTENT_ID = "12312312";
+
 	@InjectMocks
 	JsonService jsonService;
 
@@ -27,28 +31,27 @@ public class JsonDiffIntegrationTest {
 
 	@Before
 	public void setUp() {
-		Mockito.when(JsonDiffRepository.findById("1")).thenReturn(Optional.of(new JsonDiff()));
-		Mockito.when(JsonDiffRepository.findById("2")).thenReturn(null);
+		Mockito.when(JsonDiffRepository.findById(EXISTING_ID)).thenReturn(Optional.of(new JsonDiff()));
 	}
 
 	@Test()
 	public void setLeftTest() {
-		jsonService.setLeft("1", "{}");
+		jsonService.setLeft(EXISTING_ID, "{}");
 	}
 
 	@Test()
 	public void setRightTest() {
-		jsonService.setRight("1", "{}");
+		jsonService.setRight(EXISTING_ID, "{}");
 	}
 
 	@Test(expected = JsonDiffLeftNotFoundException.class)
 	public void getDiffWithoutLeftTest() throws JsonDiffException {
-		jsonService.getDiff("1");
+		jsonService.getDiff(EXISTING_ID);
 	}
 
 	@Test(expected = JsonDiffNotFoundException.class)
 	public void getDiffNotFoundTest() throws JsonDiffException {
-		jsonService.getDiff("2");
+		jsonService.getDiff(INEXISTENT_ID);
 	}
 
 }

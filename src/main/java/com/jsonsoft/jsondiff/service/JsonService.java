@@ -47,7 +47,7 @@ public class JsonService {
 
 	public ComparisonResult getDiff(String id) throws JsonDiffException {
 		Optional<JsonDiff> jsonDiffOptional = jsonDiffRepository.findById(id);
-		if (jsonDiffOptional == null || !jsonDiffOptional.isPresent()) {
+		if (!jsonDiffOptional.isPresent()) {
 			throw new JsonDiffNotFoundException();
 		}
 		
