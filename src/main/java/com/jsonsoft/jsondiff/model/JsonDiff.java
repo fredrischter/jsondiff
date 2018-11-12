@@ -1,6 +1,8 @@
 package com.jsonsoft.jsondiff.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.jsonsoft.jsondiff.exception.JsonDiffException;
@@ -18,12 +20,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class JsonDiff {
-	
+
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	String id;
 
 	String left;
-	
+
 	String right;
 
 	public ComparisonResult getComparisonResult() throws JsonDiffException {
@@ -31,13 +34,13 @@ public class JsonDiff {
 		if (getLeft() == null) {
 			throw new JsonDiffLeftNotFoundException();
 		}
-		
+
 		if (getRight() == null) {
 			throw new JsonDiffRightNotFoundException();
 		}
-		
+
 		// TODO comparison logics
 		return null;
 	}
-	
+
 }

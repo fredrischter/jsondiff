@@ -59,7 +59,7 @@ public class JsonDiffIntegrationTest {
 		.when()
 			.get("/v1/diff/1")
 		.then()
-			.statusCode(HttpStatus.OK.value());
+			.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 	
 }
