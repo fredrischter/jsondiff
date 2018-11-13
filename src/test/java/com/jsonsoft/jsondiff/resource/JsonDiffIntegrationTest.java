@@ -1,6 +1,7 @@
 package com.jsonsoft.jsondiff.resource;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.response.ValidatableResponse;
+import com.jayway.restassured.response.ValidatableResponseOptions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,36 +34,56 @@ public class JsonDiffIntegrationTest {
 	
 	@Test
 	public void httpRequestTestLeft() {
-		given()
-			.port(port)
-			.body("{}")
-			.contentType(ContentType.JSON)
-		.when()
-			.post("/v1/diff/1/left")
-		.then()
-			.statusCode(HttpStatus.OK.value());
+		postLeft("{}","1").statusCode(HttpStatus.OK.value());
 	}
 	
 	@Test
 	public void httpRequestTestRight() {
-		given()
-			.port(port)
-			.body("{}")
-			.contentType(ContentType.JSON)
-		.when()
-			.post("/v1/diff/1/right")
-		.then()
-			.statusCode(HttpStatus.OK.value());
+		postRight("{}","1").statusCode(HttpStatus.OK.value());
 	}
 	
 	@Test
 	public void httpRequestTestGetDiff() {
-		given()
-			.port(port)
-		.when()
-			.get("/v1/diff/1")
-		.then()
-			.statusCode(HttpStatus.NOT_FOUND.value());
+		get("1").statusCode(HttpStatus.NOT_FOUND.value());
+	}
+	
+	@Test
+	public void httpRequestEquals() {
+		String SAME_JSON = "{\"zz\":{\"aa\":\"bb\",\"cc\":[\"dd\",\"dd\"]},\\\"ww\\\":{\\\"aa\\\":\\\"bb\\\",\\\"cc\\\":[\\\"dd\\\",\\\"dd\\\"]}}";
+
+		postLeft(SAME_JSON, "3").statusCode(HttpStatus.OK.value());
+		postRight(SAME_JSON, "3").statusCode(HttpStatus.OK.value());
+		get("3").body(equalTo("{}")).statusCode(HttpStatus.OK.value());
+	}
+
+	private ValidatableResponseOptions<ValidatableResponse, Response> postLeft(String json, String id) {
+		return given()
+				.port(port)
+				.body(json)
+				.contentType(ContentType.JSON)
+			.when()
+				.post("/v1/diff/"+id+"/left")
+			.then()
+				.statusCode(HttpStatus.OK.value());
+	}
+
+	private ValidatableResponseOptions<ValidatableResponse, Response> postRight(String json, String id) {
+		return  given()
+				.port(port)
+				.body(json)
+				.contentType(ContentType.JSON)
+			.when()
+				.post("/v1/diff/"+id+"/right")
+			.then()
+				.statusCode(HttpStatus.OK.value());
+	}
+
+	private ValidatableResponseOptions<ValidatableResponse, Response> get(String id) {
+		return given()
+				.port(port)
+			.when()
+				.get("/v1/diff/"+id)
+			.then();
 	}
 	
 }

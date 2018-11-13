@@ -40,7 +40,7 @@ public class JsonDiff {
 		}
 
 		// TODO comparison logics
-		return null;
+		return ComparisonResult.builder().build();
 	}
 
 }

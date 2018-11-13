@@ -22,7 +22,7 @@ public class JsonService {
 		
 		JsonDiff objectToSave = null;
 		if (!jsonDiff.isPresent()) {
-			objectToSave = JsonDiff.builder().left(json).build();
+			objectToSave = JsonDiff.builder().left(json).id(id).build();
 		} else {
 			objectToSave = jsonDiff.get(); 
 			objectToSave.setLeft(json);
@@ -36,7 +36,7 @@ public class JsonService {
 		
 		JsonDiff objectToSave = null;
 		if (!jsonDiff.isPresent()) {
-			objectToSave = JsonDiff.builder().right(json).build();
+			objectToSave = JsonDiff.builder().right(json).id(id).build();
 		} else {
 			objectToSave = jsonDiff.get(); 
 			objectToSave.setRight(json);
