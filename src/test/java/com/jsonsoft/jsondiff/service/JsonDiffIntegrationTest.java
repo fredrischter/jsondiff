@@ -54,4 +54,46 @@ public class JsonDiffIntegrationTest {
 		jsonService.getDiff(INEXISTENT_ID);
 	}
 
+	@Test
+	public void getDiffExample() throws JsonDiffException {
+		//example_a.json example_b.json 
+		//example_c.json
+	}
+
+	@Test
+	public void getDiffWidgetEquals() throws JsonDiffException {
+		//full_widget.json full_widget.json
+		//equal
+	}
+
+	@Test
+	public void getDiffWidgetSummarized() throws JsonDiffException {
+		//full_widget.json widget_summarized.json
+		//size
+	}
+
+	@Test
+	public void getDiffGlossaryEquals() throws JsonDiffException {
+		//full_glossary.json full_glossary.json
+		//equal
+	}
+
+	@Test
+	public void getDiffGlossary() throws JsonDiffException {
+		//full_widget.json full_widget.json
+		//equal
+	}
+
+	@Test
+	public void getDiffGlossaryWithoutAcronym() throws JsonDiffException {
+		//full_glossary.json glossary_without_acronym.json
+		//size
+	}
+
+	@Test
+	public void getDiffGlossaryUppercase() throws JsonDiffException {
+		//full_glossary.json glossary_some_upper.json
+		//same size, different
+	}
+
 }

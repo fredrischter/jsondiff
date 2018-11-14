@@ -1,10 +1,13 @@
 package com.jsonsoft.jsondiff.service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsonsoft.jsondiff.exception.JsonDiffException;
 import com.jsonsoft.jsondiff.exception.JsonDiffNotFoundException;
 import com.jsonsoft.jsondiff.model.ComparisonResult;
@@ -56,4 +59,11 @@ public class JsonService {
 		return jsonDiff.getComparisonResult();
 	}
 	
+	public String compare(String beforeString, String afterString) throws IOException {
+		ObjectMapper jackson = new ObjectMapper(); 
+		JsonNode beforeNode = jackson.readTree(beforeString); 
+		JsonNode afterNode = jackson.readTree(afterString); 
+		JsonNode patchNode = com.flipkart.zjsonpatch.JsonDiff.asJson(beforeNode, afterNode); 
+		return patchNode.toString();
+	}
 }
