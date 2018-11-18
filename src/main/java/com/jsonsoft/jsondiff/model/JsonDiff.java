@@ -1,10 +1,14 @@
 package com.jsonsoft.jsondiff.model;
 
+import java.io.IOException;
+import java.util.EnumSet;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flipkart.zjsonpatch.DiffFlags;
 import com.jsonsoft.jsondiff.exception.JsonDiffException;
 import com.jsonsoft.jsondiff.exception.JsonDiffLeftNotFoundException;
 import com.jsonsoft.jsondiff.exception.JsonDiffRightNotFoundException;
@@ -22,14 +26,13 @@ import lombok.NoArgsConstructor;
 public class JsonDiff {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	String id;
 
 	String left;
 
 	String right;
 
-	public ComparisonResult getComparisonResult() throws JsonDiffException {
+	public ComparisonResult getComparisonResult() throws JsonDiffException, IOException {
 
 		if (getLeft() == null) {
 			throw new JsonDiffLeftNotFoundException();
@@ -39,8 +42,14 @@ public class JsonDiff {
 			throw new JsonDiffRightNotFoundException();
 		}
 
-		// TODO comparison logics
-		return ComparisonResult.builder().build();
+		boolean equalSize = getLeft().length() == getRight().length();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		EnumSet<DiffFlags> flags = DiffFlags.dontNormalizeOpIntoMoveAndCopy().clone();
+		JsonNode patch = com.flipkart.zjsonpatch.JsonDiff.asJson(mapper.readTree(getLeft()), mapper.readTree(getRight()), flags);
+		String difference = patch.asText();
+
+		return ComparisonResult.builder().equals(equalSize && difference.length()==0).difference(difference).equalSize(equalSize).build();
 	}
 
 }

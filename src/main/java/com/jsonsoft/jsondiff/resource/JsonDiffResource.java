@@ -1,5 +1,7 @@
 package com.jsonsoft.jsondiff.resource;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +32,7 @@ public class JsonDiffResource {
 	}
 
 	@GetMapping("/{id}")
-	public ComparisonResult jsonDiffPost(@PathVariable String id) throws JsonDiffException {
+	public ComparisonResult jsonDiffPost(@PathVariable String id) throws JsonDiffException, IOException {
 		return jsonService.getDiff(id);
 	}
 

@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 public class ComparisonResult {
 
 	boolean equals;
+	boolean equalSize;
+	String difference;
 	
 }

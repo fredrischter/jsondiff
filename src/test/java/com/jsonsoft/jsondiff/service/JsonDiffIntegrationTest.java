@@ -1,5 +1,6 @@
 package com.jsonsoft.jsondiff.service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -45,12 +46,12 @@ public class JsonDiffIntegrationTest {
 	}
 
 	@Test(expected = JsonDiffLeftNotFoundException.class)
-	public void getDiffWithoutLeftTest() throws JsonDiffException {
+	public void getDiffWithoutLeftTest() throws JsonDiffException, IOException {
 		jsonService.getDiff(EXISTING_ID);
 	}
 
 	@Test(expected = JsonDiffNotFoundException.class)
-	public void getDiffNotFoundTest() throws JsonDiffException {
+	public void getDiffNotFoundTest() throws JsonDiffException, IOException {
 		jsonService.getDiff(INEXISTENT_ID);
 	}
 
