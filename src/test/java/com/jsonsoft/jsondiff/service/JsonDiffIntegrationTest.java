@@ -2,6 +2,7 @@ package com.jsonsoft.jsondiff.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -98,6 +99,61 @@ public class JsonDiffIntegrationTest {
 		assertEquals(toString(example_c), diff.getDifference().toString());
 	}
 
+	@Test
+	public void getDiffWidgetEquals() throws IOException, JsonDiffException {
+		// When
+		ComparisonResult diff = compareResources(full_widget, full_widget);
+		
+		// Then
+		assertTrue(diff.isEqualSize());
+		assertTrue(diff.isEquals());
+		assertEquals("[]", diff.getDifference().toString());
+	}
+
+	@Test
+	public void getDiffWidgetSummarized() throws IOException, JsonDiffException {
+		// When
+		ComparisonResult diff = compareResources(full_widget, widget_summarized);
+		
+		// Then
+		assertFalse(diff.isEqualSize());
+		assertFalse(diff.isEquals());
+		assertEquals("[{\"op\":\"remove\",\"path\":\"/widget/window/width\",\"value\":500},{\"op\":\"remove\",\"path\":\"/widget/window/height\",\"value\":500},{\"op\":\"remove\",\"path\":\"/widget/image/hOffset\",\"value\":250},{\"op\":\"remove\",\"path\":\"/widget/image/vOffset\",\"value\":250},{\"op\":\"remove\",\"path\":\"/widget/text/style\",\"value\":\"bold\"},{\"op\":\"remove\",\"path\":\"/widget/text/name\",\"value\":\"text1\"},{\"op\":\"remove\",\"path\":\"/widget/text/hOffset\",\"value\":250},{\"op\":\"remove\",\"path\":\"/widget/text/vOffset\",\"value\":100}]", diff.getDifference().toString());
+	}
+
+	@Test
+	public void getDiffGlossaryEquals() throws IOException, JsonDiffException {
+		// When
+		ComparisonResult diff = compareResources(full_glossary, full_glossary);
+		
+		// Then
+		assertTrue(diff.isEqualSize());
+		assertTrue(diff.isEquals());
+		assertEquals("[]", diff.getDifference().toString());
+	}
+
+	@Test
+	public void getDiffGlossaryWithoutAcronym() throws JsonDiffException, IOException {
+		// When
+		ComparisonResult diff = compareResources(full_glossary, glossary_without_acronym);
+		
+		// Then
+		assertFalse(diff.isEqualSize());
+		assertFalse(diff.isEquals());
+		assertEquals("[{\"op\":\"remove\",\"path\":\"/glossary/GlossDiv/GlossList/GlossEntry/Acronym\",\"value\":\"SGML\"}]", diff.getDifference().toString());
+	}
+
+	@Test
+	public void getDiffGlossaryUppercase() throws JsonDiffException, IOException {
+		// When
+		ComparisonResult diff = compareResources(full_glossary, glossary_some_upper);
+		
+		// Then
+		assertTrue(diff.isEqualSize());
+		assertFalse(diff.isEquals());
+		assertEquals("[{\"op\":\"replace\",\"path\":\"/glossary/GlossDiv/GlossList/GlossEntry/GlossDef/para\",\"value\":\"A META-MARKUP LANGUAGE, USED TO CREATE MARKUP LANGUAGES SUCH AS DOCBOOK.\"},{\"op\":\"replace\",\"path\":\"/glossary/GlossDiv/GlossList/GlossEntry/GlossSee\",\"value\":\"MARKUP\"}]", diff.getDifference().toString());
+	}
+
 	private Object toString(Resource a) throws IOException {
 		return IOUtils.toString(a.getInputStream());
 	}
@@ -106,42 +162,6 @@ public class JsonDiffIntegrationTest {
 		ComparisonResult diff = JsonDiff.builder().left(IOUtils.toString(a.getInputStream()))
 				.right(IOUtils.toString(b.getInputStream())).build().getComparisonResult();
 		return diff;
-	}
-
-	@Test
-	public void getDiffWidgetEquals() throws JsonDiffException {
-		//full_widget.json full_widget.json
-		//equal
-	}
-
-	@Test
-	public void getDiffWidgetSummarized() throws JsonDiffException {
-		//full_widget.json widget_summarized.json
-		//size
-	}
-
-	@Test
-	public void getDiffGlossaryEquals() throws JsonDiffException {
-		//full_glossary.json full_glossary.json
-		//equal
-	}
-
-	@Test
-	public void getDiffGlossary() throws JsonDiffException {
-		//full_widget.json full_widget.json
-		//equal
-	}
-
-	@Test
-	public void getDiffGlossaryWithoutAcronym() throws JsonDiffException {
-		//full_glossary.json glossary_without_acronym.json
-		//size
-	}
-
-	@Test
-	public void getDiffGlossaryUppercase() throws JsonDiffException {
-		//full_glossary.json glossary_some_upper.json
-		//same size, different
 	}
 
 }
