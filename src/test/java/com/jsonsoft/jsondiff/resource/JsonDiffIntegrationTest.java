@@ -65,7 +65,7 @@ public class JsonDiffIntegrationTest {
 		JsonNode response = mapper.readTree(body.asString());
 		
 		//Then
-		assertEquals("", response.get("difference").asText());
+		assertEquals("[]", response.get("difference").asText());
 		assertEquals(true, response.get("equals").asBoolean());
 		assertEquals(true, response.get("equalSize").asBoolean());
 	}

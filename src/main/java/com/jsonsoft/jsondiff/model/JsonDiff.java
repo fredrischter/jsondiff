@@ -25,6 +25,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class JsonDiff {
 
+	private static final String NO_DIFFERENCE = "[]";
+
 	@Id
 	String id;
 
@@ -49,7 +51,7 @@ public class JsonDiff {
 		JsonNode patch = com.flipkart.zjsonpatch.JsonDiff.asJson(mapper.readTree(getLeft()), mapper.readTree(getRight()), flags);
 		String difference = patch.toString();
 
-		return ComparisonResult.builder().equals(equalSize && difference.length()==0).difference(difference).equalSize(equalSize).build();
+		return ComparisonResult.builder().equals(equalSize && difference.equals(NO_DIFFERENCE)).difference(difference).equalSize(equalSize).build();
 	}
 
 }
