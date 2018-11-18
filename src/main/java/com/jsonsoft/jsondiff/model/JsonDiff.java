@@ -47,7 +47,7 @@ public class JsonDiff {
 		ObjectMapper mapper = new ObjectMapper();
 		EnumSet<DiffFlags> flags = DiffFlags.dontNormalizeOpIntoMoveAndCopy().clone();
 		JsonNode patch = com.flipkart.zjsonpatch.JsonDiff.asJson(mapper.readTree(getLeft()), mapper.readTree(getRight()), flags);
-		String difference = patch.asText();
+		String difference = patch.toString();
 
 		return ComparisonResult.builder().equals(equalSize && difference.length()==0).difference(difference).equalSize(equalSize).build();
 	}

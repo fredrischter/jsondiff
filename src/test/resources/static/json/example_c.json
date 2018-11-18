@@ -1,1 +1,1 @@
-{"equals":false,"changes":[{"op":"move","from":"/a","path":"/b/2"}]}
+[{"op":"remove","path":"/a","value":0},{"op":"add","path":"/b/2","value":0}]
